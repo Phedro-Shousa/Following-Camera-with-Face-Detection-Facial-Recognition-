@@ -22,7 +22,11 @@ This repository contains two similar projects focused on camera systems:
 - **Description**: Utilizes STM32 and a ESP8266 for controlling a camera over the network with sonar capabilities.
 - **Features**:
   - Remote camera control
+  - ESP8622 connected to the network over TCP-IP
   - Sonar-based distance measurement
-- **Requirements**: STM32 microcontroller, Camera module, Ultrasonic sensor
+  - Following controll motors.
+  - Bluetooth conection and over Android App control
+  - Graphic Interface
+- **Requirements**: STM32 microcontroller, ESP8266, Camera module, Ultrasonic sensor, servo motors
 
 ![Pan Tilt](https://github.com/Phedro-Shousa/RPi-and-STM32-Camera-Projects/blob/master/Pimoroni_pan-tilt-HAT-anim.gif))
