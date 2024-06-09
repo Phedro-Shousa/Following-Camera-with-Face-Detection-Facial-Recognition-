@@ -5,9 +5,9 @@
 This repository contains two similar projects focused on camera systems:
 ## Projects
 
-### Raspberry Pi - Face Detection & Facial Recognition
+### Raspberry Pi - Following camera with Face Detection & Facial Recognition
 
-- **Description**: Implements a follwing camera with face detection and facial recognition using a Raspberry Pi. Uses Buildroot to implement own image, OpenCV, Qt for UI, and custom drivers, daemons, cthreads, etc. 
+- **Description**: Implements a following camera with face detection and facial recognition using a Raspberry Pi. Uses Buildroot to implement own image, OpenCV, Qt for UI, and custom drivers, daemons, cthreads, etc. 
 - **Features**:
   - Real-time face detection
   - Facial recognition with a pre-trained model.
@@ -25,4 +25,4 @@ This repository contains two similar projects focused on camera systems:
   - Sonar-based distance measurement
 - **Requirements**: STM32 microcontroller, Camera module, Ultrasonic sensor
 
-![Pan Tilt]([images/fac-v-animation.gif](https://global.discourse-cdn.com/business6/uploads/pimoroni/original/2X/0/02fd332b0c3c3cccf567e4244dc357189fadec11.gif))
+![Pan Tilt](https://github.com/Phedro-Shousa/RPi-and-STM32-Camera-Projects/blob/master/Pimoroni_pan-tilt-HAT-anim.gif))
