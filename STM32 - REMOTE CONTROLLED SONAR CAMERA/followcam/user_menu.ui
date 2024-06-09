@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>USER_MENU</class>
+ <widget class="QDialog" name="USER_MENU">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>990</width>
+    <height>545</height>
+   </rect>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#USER_MENU{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/settings_backgroung.jpg);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+  </property>
+  <widget class="QPushButton" name="automatic_button">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>120</y>
+     <width>301</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#automatic_button{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/AUTOMATIC_off.png);
+background: none;
+border: none;
+background-repeat: none;
+}
+
+#automatic_button:pressed{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/AUTOMATIC.png);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="manual_button">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>120</y>
+     <width>311</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#manual_button{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/MANUAL_off.png);
+background: none;
+border: none;
+background-repeat: none;
+}
+#manual_button:pressed{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/MANUAL.png);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="home_button">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>430</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#home_button{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/HOME_off.png);
+background: none;
+border: none;
+background-repeat: none;
+}
+#home_button:pressed{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/HOME.png);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,103 @@
+#include "tface_center_control.h"
+#include <ctime>
+#define MAX_X_POS 510
+#define MIN_X_POS 110
+#include "unistd.h"
+
+tface_center_control::tface_center_control(followcam *original_followcam)
+{
+    m_followcam = original_followcam;
+      prev_error = 0;
+      y_prev_error = 0;
+      ki=0.2;
+      kp=0.3;
+      kd=0.08;
+      y_ki=0;
+      y_kp=0.07;
+      y_kd=0;
+      deltatime = 0.4;
+      ci = 0;
+      y_ci = 0;
+      value_pwm = MAX_X_POS/2;
+      y_value_pwm = MAX_Y_POS/2;
+}
+
+tface_center_control::~tface_center_control(){
+}
+
+void tface_center_control::run(void *){
+    value_pwm=MAX_X_POS/2;
+    y_value_pwm=MAX_Y_POS/2;
+
+    while (1) {
+
+      pthread_cond_wait( & (m_followcam -> condition_face_center_control), & (m_followcam -> condition_face_center_control_mutex));
+
+      if (m_followcam -> mode == AUTOMATIC_W_DETECT) {
+        ki = 0.2;
+        kp = 0.3;
+        kd = 0.08;
+        y_ki = 0.03;
+        y_kp = 0.25;
+        y_kd = 0.05;
+        deltatime = 0.5;
+      } else {
+        ki = 0.1;
+        kp = 0.25;
+        kd = 0.09;
+        y_ki = 0.02;
+        y_kp = 0.15;
+        y_kd = 0.05;
+        deltatime = 0.8;
+      }
+
+      pthread_mutex_lock( & (m_followcam -> mutex_face_center_control));
+      error = m_followcam -> x_deltaerror;
+      y_error = m_followcam -> y_deltaerror;
+
+      delta_error = error - prev_error;
+      y_delta_error = y_error - y_prev_error;
+
+      prev_error = error;
+      y_prev_error = y_error;
+
+      ci = ci + (error * deltatime * ki);
+      y_ci = y_ci + (y_error * deltatime * y_ki);
+
+      if (ci > 25) {
+        ci = 25;
+      } else if (ci < -25) {
+        ci = -25;
+      }
+      if (y_ci > 20) {
+        y_ci = 20;
+      } else if (y_ci < -20) {
+        y_ci = -20;
+      }
+
+      output = (error * kp) + (ci) + (delta_error / deltatime) * kd;
+      y_output = (y_error * y_kp) + (y_ci) + (y_delta_error / deltatime) * y_kd;
+
+      value_pwm += (int) output;
+      y_value_pwm -= (int) y_output;
+
+      if (value_pwm > 510) {
+        value_pwm = 510;
+      } else if (value_pwm < 110) {
+        value_pwm = 110;
+      }
+
+      if (y_value_pwm > 400) {
+        y_value_pwm = 400;
+      } else if (y_value_pwm < 100) {
+        y_value_pwm = 100;
+      }
+
+      pthread_mutex_unlock( & (m_followcam -> mutex_face_center_control));
+
+      m_followcam -> x_actuate_value = value_pwm;
+      m_followcam -> y_actuate_value = y_value_pwm;
+
+      sem_post( & m_followcam -> sem_servo_manage);
+    }
+}

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SETTINGS_MENU</class>
+ <widget class="QDialog" name="SETTINGS_MENU">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>990</width>
+    <height>545</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#SETTINGS_MENU{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/settings_backgroung.jpg);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+  </property>
+  <widget class="QPushButton" name="home_button">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>430</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#home_button{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/HOME_off.png);
+background: none;
+border: none;
+background-repeat: none;
+}
+#home_button:pressed{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/HOME.png);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="detect_button">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>150</y>
+     <width>241</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#detect_button{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/DETECTING_FACE_off.png);
+background: none;
+border: none;
+background-repeat: none;
+}
+#detect_button:pressed{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/DETECTING_FACE.png);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="recognize_button">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>140</y>
+     <width>251</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#recognize_button{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/RECOGNIZE_FACE_off.png);
+background: none;
+border: none;
+background-repeat: none;
+}
+#recognize_button:pressed{
+background-color: transparent;
+border-image: url(:etc/bimgs_qt/RECOGNIZE_FACE.png);
+background: none;
+border: none;
+background-repeat: none;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>home_button</zorder>
+  <zorder>recognize_button</zorder>
+  <zorder>detect_button</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

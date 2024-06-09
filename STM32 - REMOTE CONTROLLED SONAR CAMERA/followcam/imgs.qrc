@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/etc/bimgs_qt">
+        <file>ON.png</file>
+        <file>OFF.png</file>
+        <file>MANUAL.png</file>
+        <file>AUTOMATIC.png</file>
+        <file>SETTINGS.png</file>
+        <file>settings_backgroung.jpg</file>
+        <file>BACK.png</file>
+        <file>HOME.png</file>
+        <file>SETTINGS_on.png</file>
+        <file>MANUAL_off.png</file>
+        <file>HOME_off.png</file>
+        <file>BACK_clear.png</file>
+        <file>AUTOMATIC_off.png</file>
+        <file>menu_backgroung.jpg</file>
+        <file>SQUARE_SHAPE.png</file>
+        <file>RECOGNIZE_FACE_off.png</file>
+        <file>DETECTING_FACE_off.png</file>
+        <file>DETECTING_FACE.png</file>
+        <file>RECOGNIZE_FACE.png</file>
+        <file>EXIT.png</file>
+        <file>EXIT_on.png</file>
+        <file>PLAY_on.png</file>
+        <file>PLAY.png</file>
+        <file>ARROW_LEFT_on.png</file>
+        <file>ARROW_RIGHT_on.png</file>
+        <file>ARROW_LEFT.png</file>
+        <file>ARROW_RIGHT.png</file>
+        <file>LIGHT_OFF.png</file>
+        <file>LIGHT_MODE.png</file>
+        <file>LIGHT_ON.png</file>
+        <file>NOVIDEO.png</file>
+        <file>WARMING.jpg</file>
+        <file>ARROW_DOWN_on.png</file>
+        <file>ARROW_UP_on.png</file>
+        <file>ARROW_DOWN.png</file>
+        <file>ARROW_UP.png</file>
+    </qresource>
+</RCC>

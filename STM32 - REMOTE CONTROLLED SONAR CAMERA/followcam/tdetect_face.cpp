@@ -1,0 +1,117 @@
+#include "tdetect_face.h"
+#include "followcam.h"
+
+
+tdetect_face::tdetect_face(followcam*origin_followcam)
+{
+    m_followcam = origin_followcam;
+}
+
+tdetect_face::~tdetect_face()
+{
+}
+
+void tdetect_face::run(void* param)
+{
+CDetection face_detection("/etc/haarcascade_frontalface_default.xml");
+Mat gray_frame, gray_frame_resized, frame_resized;
+vector<cv::Rect_<int>> faces;
+Mat frame_w_detection;
+double xdistance_from_center,ydistance_from_center;
+double x_center;
+double y_center;
+bool face_was_found;
+
+face_detection.loadClassifier();
+
+    while(1){
+        //acrescentar mutex de condition variables
+        pthread_cond_wait(&(m_followcam->condition_img_acquired), &(m_followcam->condition_img_acquired_mutex));
+        if(m_followcam->mode == AUTOMATIC_W_DETECT){
+            y_center = (SIZE_OF_FRAMES_LENGHT/6);
+            x_center = (SIZE_OF_FRAMES_WIDTH/6);
+
+            //prepare the image acquired for detection
+            pthread_mutex_lock(&(m_followcam->mutex_lastframecap));
+            cvtColor(m_followcam->last_framecaptured, gray_frame, CV_BGR2GRAY );
+            cv :: resize(m_followcam->last_framecaptured, frame_resized , Size(SIZE_OF_FRAMES_WIDTH/3,SIZE_OF_FRAMES_LENGHT/3), 1.0, 1.0, INTER_CUBIC);
+            pthread_mutex_unlock(&(m_followcam->mutex_lastframecap));
+
+            cv :: resize(gray_frame, gray_frame_resized, Size(SIZE_OF_FRAMES_WIDTH/3,SIZE_OF_FRAMES_LENGHT/3), 1.0, 1.0, INTER_CUBIC);
+        }else{
+            //prepare the image acquired for detection that will be used in recognition
+            pthread_mutex_lock(&(m_followcam->mutex_lastframecap));
+            cvtColor(m_followcam->last_framecaptured, gray_frame, CV_BGR2GRAY );
+            frame_resized = m_followcam->last_framecaptured;
+            gray_frame_resized = gray_frame;
+            pthread_mutex_unlock(&(m_followcam->mutex_lastframecap));
+
+            //collect the original image for recognition
+            pthread_mutex_lock(&(m_followcam->mutex_detection_data));
+            m_followcam->data_tdetect_face.gray_frame_recized = gray_frame;
+            pthread_mutex_unlock(&(m_followcam->mutex_detection_data));
+        }
+
+        //detect faces
+        faces = face_detection.identifyFaces(gray_frame_resized);
+
+        pthread_mutex_lock(&(m_followcam->mutex_detection_data));
+        //print on the interface how many faces was found
+        m_followcam->updater.newnumberoffaces(faces.size());
+        pthread_mutex_unlock(&(m_followcam->mutex_detection_data));
+
+        if(m_followcam->mode == AUTOMATIC_W_DETECT){
+            for(unsigned int i = 0 ; i < faces.size(); i++)
+            {
+            // Create rectange with the image
+            Rect face_i = faces[i];
+            Mat face = gray_frame_resized(face_i);
+
+            // Create rectange to attach the image -> just in detect mode
+          if(m_followcam->mode == AUTOMATIC_W_DETECT){
+            rectangle(frame_resized ,faces[0], CV_RGB(0, 255,0), 1);
+          }
+
+          //show distance by center
+          //cout << "x_distance_from_center= " << x_center << endl;
+          //cout << "y_distance_from_center= " << y_center << endl;
+            xdistance_from_center =  (x_center-(face_i.x+(face_i.width*0.5)));  //if a face is on right the value is positive otherwise the value is negative
+            ydistance_from_center =  (y_center-(face_i.y+(face_i.height*0.5))); //if a face is on up the value is positive otherwise the value is negative
+            face_was_found =true;
+            }
+        }
+
+        //save the information about detection
+        pthread_mutex_lock(&(m_followcam->mutex_detection_data));
+        m_followcam->data_tdetect_face.vec_of_faces = faces;
+        pthread_mutex_unlock(&(m_followcam->mutex_detection_data));
+
+        if(m_followcam->mode == AUTOMATIC_W_RECOGN){
+        pthread_cond_signal( &(m_followcam->condition_img_detected));
+        }else{
+            //put the image in size of the window
+            //cv :: resize(frame_resized, frame_resized , Size(SIZE_OF_FRAMES_WIDTH,SIZE_OF_FRAMES_LENGHT), 1.0, 1.0, INTER_CUBIC);
+            //m_followcam->updater.newimagerecord(QImage(frame_resized.data, frame_resized.cols, frame_resized.rows, frame_resized.step, QImage::Format_RGB888));
+
+            pthread_mutex_lock(&(m_followcam->mutex_lastframecap));
+            m_followcam->last_framecaptured = frame_resized;
+            pthread_mutex_unlock(&(m_followcam->mutex_lastframecap));
+
+            pthread_cond_signal( &(m_followcam->condition_print_image));
+
+            if(face_was_found){
+            //apply control to center camera
+            pthread_mutex_lock(&(m_followcam->mutex_face_center_control));
+            m_followcam->x_deltaerror = xdistance_from_center;
+            m_followcam->y_deltaerror = ydistance_from_center;
+            //cout << "error x: " << xdistance_from_center << endl;
+            //cout << "error y: " << ydistance_from_center << endl;
+            pthread_mutex_unlock(&(m_followcam->mutex_face_center_control));
+
+            pthread_cond_signal( &(m_followcam->condition_face_center_control));
+            }
+            face_was_found = false;
+        }
+    }
+}
+

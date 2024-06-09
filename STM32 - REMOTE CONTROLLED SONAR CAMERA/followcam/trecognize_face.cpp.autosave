@@ -1,0 +1,94 @@
+#include "trecognize_face.h"
+#include "followcam.h"
+
+trecognize_face::trecognize_face(followcam*origin_followcam)
+{
+    m_followcam = origin_followcam;
+    model =  createLBPHFaceRecognizer();
+}
+
+trecognize_face::~trecognize_face(){}
+
+void trecognize_face::run(void *)
+{
+    string path;
+    vector < Mat > images_of_dataset, images_of_dataset_recized;
+    Mat img_to_recize, img_recized;
+    vector < int > labels;
+    Rect face_i;
+    Mat face, face_recized, frame_w_recognition;
+    Mat recognized_frame_recized, detected_gray_frame_recized;
+    int predicted_label = -1;
+    double predicted_confidence = 0.0;
+    bool person_recognized = false;
+    double x_center = SIZE_OF_FRAMES_WIDTH / 4;
+    double y_center = SIZE_OF_FRAMES_LENGHT / 4;
+    double xdistance_from_center, ydistance_from_center;
+    //########### images aquisition ##############
+    int j = 0;
+    int i = 1;
+    for (i = 1; i <= 30; i++) {
+      path = "/etc/dataset/user1_" + to_string(i) + ".jpg";
+      images_of_dataset.push_back(cv::imread(path, CV_LOAD_IMAGE_GRAYSCALE));
+      img_to_recize = images_of_dataset.at(j);
+      images_of_dataset.pop_back();
+      images_of_dataset.push_back(img_to_recize);
+      j++;
+    }
+    i = 1;
+    for (i = 1; i <= 30; i++) {
+      labels.push_back(i);
+    }
+
+    //########### train of current dataset ##############
+    model -> train(images_of_dataset, labels);
+
+    while (1) {
+      pthread_cond_wait( & (m_followcam -> condition_img_detected), & (m_followcam -> condition_img_detected_mutex));
+      pthread_mutex_lock( & (m_followcam -> mutex_lastframecap));
+      recognized_frame_recized = m_followcam -> last_framecaptured;
+      pthread_mutex_unlock( & (m_followcam -> mutex_lastframecap));
+      pthread_mutex_lock( & (m_followcam -> mutex_detection_data));
+      //cout << "num faces to detect = "<< m_followcam->data_tdetect_face.vec_of_faces.size() << endl;
+      detected_gray_frame_recized = m_followcam -> data_tdetect_face.gray_frame_recized;
+
+      if (m_followcam -> data_tdetect_face.vec_of_faces.size()) {
+        for (unsigned int i = 0; i < m_followcam -> data_tdetect_face.vec_of_faces.size(); i++) {
+          // Create rectange with the imaCDataSet mydataset;ge
+          face_i = m_followcam -> data_tdetect_face.vec_of_faces[i];
+          face = detected_gray_frame_recized(face_i);
+
+          model -> predict(face, predicted_label, predicted_confidence);
+          prediction = CPrediction(predicted_label, predicted_confidence);
+          if (predicted_confidence <= 70) {
+            xdistance_from_center = (x_center - (face_i.x + (face_i.width * 0.5))); 
+            //if a face is on right the value is positive otherwise the value is negative
+            ydistance_from_center = (y_center - (face_i.y + (face_i.height * 0.5)));
+            //if a face is on up the value is positive otherwise the value is negative
+            person_recognized = true;
+            cv::putText(recognized_frame_recized, "Joao", cvPoint(face_i.x + (face_i.width * 0.5) - 26, face_i.y - 25), FONT_HERSHEY_COMPLEX_SMALL, 0.6, cvScalar(0, 255, 0), 2, CV_AA);
+          }
+        }
+
+        cout << "confidence: " << predicted_confidence << endl;
+      }
+      pthread_mutex_unlock( & (m_followcam -> mutex_detection_data));
+      //if a person was recognized apply the face center control
+      if (person_recognized) {
+        //apply control to center camera
+        pthread_mutex_lock( & (m_followcam -> mutex_face_center_control));
+        m_followcam -> x_deltaerror = xdistance_from_center;
+        m_followcam -> y_deltaerror = ydistance_from_center;
+        pthread_mutex_unlock( & (m_followcam -> mutex_face_center_control));
+
+        pthread_cond_signal( & (m_followcam -> condition_face_center_control));
+      }
+      //reset the variable
+      person_recognized = false;
+      pthread_mutex_lock( & (m_followcam -> mutex_lastframecap));
+      m_followcam -> last_framecaptured = recognized_frame_recized;
+      pthread_mutex_unlock( & (m_followcam -> mutex_lastframecap));
+      pthread_cond_signal( & (m_followcam -> condition_print_image));
+    }
+}
+

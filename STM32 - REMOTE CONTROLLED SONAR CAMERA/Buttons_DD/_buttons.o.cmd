@@ -1,0 +1,1 @@
+cmd_/home/pedro/Desktop/Buttons_DD/buttons.o := arm-buildroot-linux-uclibcgnueabihf-ld -EL    -r -o /home/pedro/Desktop/Buttons_DD/buttons.o /home/pedro/Desktop/Buttons_DD/buttons_dd.o /home/pedro/Desktop/Buttons_DD/utils.o 
