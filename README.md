@@ -16,8 +16,7 @@ This repository contains two similar projects focused on camera systems:
   - Graphic Interface
 - **Requirements**: Raspberry Pi, Camera module, OpenCV, Qt, Buildroot, Servo-motors
 
-![rpi camera](rpi camera.png)
-
+![RPi_Camera_Box](https://github.com/Phedro-Shousa/RPi-and-STM32-Camera-Projects/edit/master/RPi_Camera_Box.png)
 
 ### STM32 - Remote Controlled Sonar Camera
 
