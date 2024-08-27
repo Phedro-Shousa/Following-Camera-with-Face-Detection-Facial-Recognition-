@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository is a dump of two similar old projects focused on camera systems:
+This repository is a dump of two similar old 2020 projects focused on camera systems:
 ## Projects
 
 ### Raspberry Pi - Following camera with Face Detection & Facial Recognition
